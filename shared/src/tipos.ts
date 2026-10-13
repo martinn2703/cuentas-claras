@@ -1,9 +1,9 @@
 type Brand<K,T> = K & { readonly __brand: T }
 
-type UserId = Brand<number, "UserId">
-type GroupId = Brand<number, "GroupId">
-type ExpenseId = Brand<number, "ExpenseId">
-type PaymentId = Brand<number, "PaymentId">
+export type UserId = Brand<number, "UserId">
+export type GroupId = Brand<number, "GroupId">
+export type ExpenseId = Brand<number, "ExpenseId">
+export type PaymentId = Brand<number, "PaymentId">
 
 export type User = {
     readonly id: UserId
@@ -13,19 +13,19 @@ export type User = {
 export type Group = {
     readonly id: GroupId
     readonly nombre: string
-    readonly usuarios: number[]
+    readonly usuarios: readonly UserId[]
 }
 
 type Division = 
-| { tipo: "iguales"; pagadores: number[] }
-| { tipo: "montos"; pagadores: number[]; montos: number[] }
+| { tipo: "iguales"; participantes: readonly UserId[] }
+| { tipo: "montos"; montos: readonly { usuarioId: UserId; monto: number }[] }
 
 export type Expense = {
     readonly id: ExpenseId
     readonly descripcion: string
-    readonly montoTotal: number
-    readonly grupoId: number
-    readonly pagadorId: number
+    readonly montoTotal: number // en centavos
+    readonly grupoId: GroupId
+    readonly pagadorId: UserId
     readonly fecha: Date
     readonly division: Division
 }
@@ -33,8 +33,8 @@ export type Expense = {
 export type Payment = {
     readonly id: PaymentId
     readonly monto: number // en centavos
-    readonly grupoId: number
-    readonly pagadorId: number
-    readonly receptorId: number
+    readonly grupoId: GroupId
+    readonly pagadorId: UserId
+    readonly receptorId: UserId
     readonly fecha: Date
 }
