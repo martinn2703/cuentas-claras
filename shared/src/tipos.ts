@@ -1,3 +1,5 @@
+// Los branded types se usan para diferenciar tipos primitivos idénticos
+// como string o number para evitar mezclar por error datos semánticamente distintos
 type Brand<K,T> = K & { readonly __brand: T }
 
 export type UserId = Brand<number, "UserId">
@@ -16,7 +18,7 @@ export type Group = {
     readonly usuarios: readonly UserId[]
 }
 
-type Division = 
+export type Division = 
 | { tipo: "iguales"; participantes: readonly UserId[] }
 | { tipo: "montos"; montos: readonly { usuarioId: UserId; monto: number }[] }
 
