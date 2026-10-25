@@ -105,7 +105,7 @@ describe("Tests de calcular balances", () => {
         ]))
     })
 
-    test("Un gasto donde quien paga no participa", () => {
+    test("Un gasto donde quien paga no participa (iguales)", () => {
         const pagadorGasto = 1 as UserId
         const divisionPartesIguales: Division = {
             tipo: 'iguales',
@@ -129,6 +129,42 @@ describe("Tests de calcular balances", () => {
            [1 as UserId, 1000],
            [2 as UserId, -500],
            [3 as UserId, -500]
+        ]))      
+    })
+
+    test("Un gasto donde quien paga no participa (por montos)", () => {
+        const pagadorGasto = 1 as UserId
+        const divisionPorMontos: Division = {
+            tipo: 'montos',
+            montos: [
+                {
+                    usuarioId: 2 as UserId,
+                    monto: 700
+                },
+                {
+                    usuarioId: 3 as UserId,
+                    monto: 100
+                }
+            ]
+        }
+
+        const gastos: Expense[] = [
+            {
+                id: 1 as ExpenseId,
+                descripcion: "Gasto de prueba",
+                division: divisionPorMontos,
+                fecha: new Date(),
+                grupoId: 1 as GroupId,
+                montoTotal: 800,
+                pagadorId: pagadorGasto
+            }
+        ]
+
+        const balances = calcularBalances(gastos, [])
+        expect(balances).toEqual(new Map<UserId, number>([
+           [1 as UserId, 800],
+           [2 as UserId, -700],
+           [3 as UserId, -100]
         ]))      
     })
 
