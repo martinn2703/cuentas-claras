@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { Expense, Payment, Division, ExpenseId, PaymentId, UserId, GroupId, User } from './tipos';
+import { Expense, Payment, Division, ExpenseId, PaymentId, UserId, GroupId, User, Group } from './tipos';
 import { calcularBalances, simplificarDeudas } from './balances';
 
 describe("Tests de calcular balances", () => {
@@ -425,6 +425,100 @@ describe("Tests de calcular balances", () => {
                 de: 4,
                 a: 2,
                 monto: 100 // [0,0,0,0]
+            }
+        ])
+    })
+
+    test("Segundo test simplificarDeudas", () => {
+        const pagador = 1 as UserId
+        const divisionPorMontos: Division = {
+            tipo: 'montos',
+            montos: [
+                {
+                    usuarioId: 2 as UserId,
+                    monto: 300
+                },
+                {
+                    usuarioId: 3 as UserId,
+                    monto: 400
+                }
+            ]
+        }
+
+        const gastos: Expense[] = [
+            {
+                id: 1 as ExpenseId,
+                descripcion: "Gasto de prueba",
+                division: divisionPorMontos,
+                fecha: new Date(),
+                grupoId: 1 as GroupId,
+                montoTotal: 700,
+                pagadorId: pagador
+            }
+        ]
+
+        const balances = calcularBalances(gastos, []);
+        const transferencias = simplificarDeudas(balances);
+        expect(transferencias).toEqual([
+            {
+                de: 3,
+                a: 1,
+                monto: 400
+            },
+            {
+                de: 2,
+                a: 1,
+                monto: 300
+            }
+        ])
+    })
+
+    test("Tercer test simplificarDeudas", () => {
+        const pagadorGastoUno = 1 as UserId
+        const pagadorGastoDos = 2 as UserId
+        const divisionPartesIgualesGastoUno: Division = {
+            tipo: 'iguales',
+            participantes: [1,3] as UserId[]
+        }
+
+        const divisionPartesIgualesGastoDos: Division = {
+            tipo: 'iguales',
+            participantes: [2,3] as UserId[]
+        }
+
+        const gastos: Expense[] = [
+            {
+                id: 1 as ExpenseId,
+                descripcion: "Gasto uno",
+                division: divisionPartesIgualesGastoUno,
+                fecha: new Date(),
+                grupoId: 1 as GroupId,
+                montoTotal: 1000,
+                pagadorId: pagadorGastoUno
+            },
+            {
+                id: 1 as ExpenseId,
+                descripcion: "Gasto dos",
+                division: divisionPartesIgualesGastoDos,
+                fecha: new Date(),
+                grupoId: 1 as GroupId,
+                montoTotal: 1000,
+                pagadorId: pagadorGastoDos
+            }
+        ]
+
+        const balances = calcularBalances(gastos, []);
+        const transferencias = simplificarDeudas(balances);
+        expect(transferencias).toEqual([
+            {
+                de: 3,
+                a: 1,
+                monto: 500
+            },
+            {
+                de: 3,
+                a: 2,
+                monto: 500
             }
         ])
     })

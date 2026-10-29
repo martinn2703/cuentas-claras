@@ -1,4 +1,4 @@
-import { Expense,Payment,User,UserId } from "./tipos";
+import { Expense,Payment,Transferencia,UserId } from "./tipos";
 
 export function calcularBalances(
   gastos: readonly Expense[],
@@ -61,23 +61,23 @@ export function calcularBalances(
 
 export function simplificarDeudas(
   balances: Map<UserId, number>,
-): { de: UserId; a: UserId; monto: number }[]{
-    let transferencias: { de: UserId; a: UserId; monto: number }[] = []
-    const _balances = balances
+): Transferencia[]{
+    const transferencias: Transferencia[] = []
+    const _balances = new Map(balances) // si hacemos const _balances = balances, apuntan a lo mismo, entonces al modificar _balances también se modifica balances
 
     while(Array.from(_balances.values()).some(v => v !== 0)){
-        const [usuarioConMayorSaldo, debeMenos] = Array.from(_balances.entries()).reduce(
+        const [usuarioConMayorSaldo, credito] = Array.from(_balances.entries()).reduce(
             (max, actual) => (actual[1] > max[1] ? actual : max)
         );
         
-        const [usuarioQueDebeMas, debeMas] = Array.from(_balances.entries()).reduce(
+        const [usuarioQueDebeMas, deuda] = Array.from(_balances.entries()).reduce(
             (min, actual) => (actual[1] < min[1] ? actual : min)
         );
 
-        const montoTransferido = (debeMenos + debeMas) < 0 ? debeMenos : -debeMas
+        const montoTransferido = Math.min(credito, -deuda)
 
-        _balances.set(usuarioQueDebeMas, (debeMenos + debeMas) < 0 ? debeMenos + debeMas : 0 )
-        _balances.set(usuarioConMayorSaldo, (debeMenos + debeMas) < 0 ? 0 : debeMenos + debeMas)
+        _balances.set(usuarioQueDebeMas, (credito + deuda) < 0 ? credito + deuda : 0 )
+        _balances.set(usuarioConMayorSaldo, (credito + deuda) < 0 ? 0 : credito + deuda)
 
         transferencias.push({
             de: usuarioQueDebeMas,
@@ -88,19 +88,3 @@ export function simplificarDeudas(
 
     return transferencias
 }
-
-// A +300, B +200, C +100, D +100, E -300, F -400
-// A +700, B −300, C −400
-// Hacen falta 2 transferencias
-// transferencias = [
-//     {
-//        de: B,
-//        a: A,
-//        monto: 300
-//     },
-//     {
-//        de: C,
-//        a: A,
-//        monto: 400
-//     }
-// ]

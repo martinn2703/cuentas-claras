@@ -40,3 +40,9 @@ export type Payment = {
     readonly receptorId: UserId
     readonly fecha: Date
 }
+
+export type Transferencia = {
+    de: UserId
+    a: UserId
+    monto: number
+}
