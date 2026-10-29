@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true, // -> prohibir el any implícito y obligar a manejar null/undefined
+    "noUncheckedIndexedAccess": true, // -> leer obj[clave] o arr[i] puede dar undefined
+    "exactOptionalPropertyTypes": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"] // -> Solo compilar los archivos que están en src/
+}
