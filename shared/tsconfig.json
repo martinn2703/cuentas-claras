@@ -7,7 +7,8 @@
     "noUncheckedIndexedAccess": true, // -> leer obj[clave] o arr[i] puede dar undefined
     "exactOptionalPropertyTypes": true,
     "noEmit": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true
   },
   "include": ["src"] // -> Solo compilar los archivos que están en src/
 }

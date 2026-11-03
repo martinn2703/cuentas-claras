@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { Expense, Payment, Division, ExpenseId, PaymentId, UserId, GroupId, User, Group } from './tipos';
+import { type Expense, type Payment, type Division, type ExpenseId, type PaymentId, type UserId, type GroupId } from './tipos';
 import { calcularBalances, simplificarDeudas } from './balances';
 
 describe("Tests de calcular balances", () => {

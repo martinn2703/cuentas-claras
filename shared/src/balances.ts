@@ -1,4 +1,4 @@
-import { Expense,Payment,Transferencia,UserId } from "./tipos";
+import { type Expense, type Payment, type Transferencia, type UserId } from "./tipos";
 
 export function calcularBalances(
   gastos: readonly Expense[],

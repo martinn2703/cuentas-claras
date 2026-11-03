@@ -1,0 +1,5 @@
+{
+  "name": "cuentas-claras",
+  "private": true,
+  "workspaces": ["shared", "client"]
+}
